@@ -1,0 +1,2 @@
+#define Terminal3D_VERSION_MAJOR @Terminal3D_VERSION_MAJOR@
+#define Terminal3D_VERSION_MINOR @Terminal3D_VERSION_MINOR@
