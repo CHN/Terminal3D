@@ -8,20 +8,41 @@ project(Terminal3D VERSION 0.1)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/output/")
 
-set(INCLUDES_DIR "${PROJECT_SOURCE_DIR}/includes/")
-file(GLOB_RECURSE SOURCE_DIR "${PROJECT_SOURCE_DIR}/src/*.cpp")
-
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set(CMAKE_UNITY_BUILD False)
 
+set(INCLUDES_DIR "${PROJECT_SOURCE_DIR}/includes/")
+set(SOURCE_DIR "${PROJECT_SOURCE_DIR}/src/")
+
+file(GLOB_RECURSE INCLUDES_DIR_RECURSE "${INCLUDES_DIR}/*.h")
+file(GLOB_RECURSE SOURCE_DIR_RECURSE "${SOURCE_DIR}/*.cpp")
+
+set(PLATFORM_DEPENDENT_DIR "${SOURCE_DIR}/Terminal3D/PlatformDependent/")
+
+list(FILTER SOURCE_DIR_RECURSE EXCLUDE REGEX "^${PLATFORM_DEPENDENT_DIR}")
+
+if(WIN32)
+	set(CURRENT_PLATFORM Windows)
+elseif(APPLE)
+	set(CURRENT_PLATFORM MacOS)
+elseif(UNIX)
+	set(CURRENT_PLATFORM Unix)
+endif()
+
+file(GLOB_RECURSE PLATFORM_DEPENDENT_SOURCE_FILES "${PLATFORM_DEPENDENT_DIR}/${CURRENT_PLATFORM}/*.cpp")
+list(APPEND SOURCE_DIR_RECURSE ${PLATFORM_DEPENDENT_SOURCE_FILES})
+
 # add the executable
-add_executable(Terminal3D main.cpp)
+add_executable(Terminal3D main.cpp ${INCLUDES_DIR_RECURSE} ${SOURCE_DIR_RECURSE})
 
-target_include_directories(Terminal3D PUBLIC "${INCLUDES_DIR}")
-target_sources(Terminal3D PRIVATE "${SOURCE_DIR}")
+target_include_directories(Terminal3D PUBLIC ${INCLUDES_DIR})
+target_sources(Terminal3D PRIVATE ${SOURCE_DIR_RECURSE})
 
-target_link_libraries(Terminal3D PUBLIC ncurses)
+source_group(TREE ${PROJECT_SOURCE_DIR} FILES ${INCLUDES_DIR_RECURSE})
+source_group(TREE ${PROJECT_SOURCE_DIR} FILES ${SOURCE_DIR_RECURSE})
+
+#target_link_libraries(Terminal3D PUBLIC ncurses)
 
 configure_file(Terminal3DConfig.h.in "${INCLUDES_DIR}/Terminal3DConfig.h")
