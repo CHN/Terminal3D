@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.10)
 project(Terminal3D)
 
 # set the project name and version
-project(Terminal3D VERSION 0.1)
+project(${PROJECT_NAME} VERSION 0.1)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/output/")
 
@@ -19,7 +19,7 @@ set(SOURCE_DIR "${PROJECT_SOURCE_DIR}/src/")
 file(GLOB_RECURSE INCLUDES_DIR_RECURSE "${INCLUDES_DIR}/*.h")
 file(GLOB_RECURSE SOURCE_DIR_RECURSE "${SOURCE_DIR}/*.cpp")
 
-set(PLATFORM_DEPENDENT_DIR "${SOURCE_DIR}/Terminal3D/PlatformDependent/")
+set(PLATFORM_DEPENDENT_DIR "${SOURCE_DIR}/${PROJECT_NAME}/PlatformDependent/")
 
 list(FILTER SOURCE_DIR_RECURSE EXCLUDE REGEX "^${PLATFORM_DEPENDENT_DIR}")
 
@@ -35,14 +35,14 @@ file(GLOB_RECURSE PLATFORM_DEPENDENT_SOURCE_FILES "${PLATFORM_DEPENDENT_DIR}/${C
 list(APPEND SOURCE_DIR_RECURSE ${PLATFORM_DEPENDENT_SOURCE_FILES})
 
 # add the executable
-add_executable(Terminal3D main.cpp ${INCLUDES_DIR_RECURSE} ${SOURCE_DIR_RECURSE})
+add_executable(${PROJECT_NAME} main.cpp ${INCLUDES_DIR_RECURSE} ${SOURCE_DIR_RECURSE})
 
-target_include_directories(Terminal3D PUBLIC ${INCLUDES_DIR})
-target_sources(Terminal3D PRIVATE ${SOURCE_DIR_RECURSE})
+target_include_directories(${PROJECT_NAME} PUBLIC ${INCLUDES_DIR})
+target_sources(${PROJECT_NAME} PRIVATE ${SOURCE_DIR_RECURSE})
 
 source_group(TREE ${PROJECT_SOURCE_DIR} FILES ${INCLUDES_DIR_RECURSE})
 source_group(TREE ${PROJECT_SOURCE_DIR} FILES ${SOURCE_DIR_RECURSE})
 
-#target_link_libraries(Terminal3D PUBLIC ncurses)
+#target_link_libraries(${PROJECT_NAME} PUBLIC ncurses)
 
-configure_file(Terminal3DConfig.h.in "${INCLUDES_DIR}/Terminal3DConfig.h")
+configure_file(${PROJECT_NAME}Config.h.in "${INCLUDES_DIR}/${PROJECT_NAME}Config.h")
