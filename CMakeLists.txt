@@ -1,10 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-# set the project name
-project(Terminal3D)
-
-# set the project name and version
-project(${PROJECT_NAME} VERSION 0.1)
+project(Terminal3D VERSION 0.1)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/output/")
 
