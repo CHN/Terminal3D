@@ -291,7 +291,7 @@ struct Matrix
 
         outVector.x = temp[0] / temp[3];
         outVector.y = temp[1] / temp[3];
-        outVector.z = temp[2];// / temp[3];
+        outVector.z = temp[2] / temp[3];
 
         return outVector;
     }
