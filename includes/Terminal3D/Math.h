@@ -100,10 +100,10 @@ Vector3D<T> operator*(T value, Vector3D<T> vector)
     return Vector3D(vector.x * value, vector.y * value, vector.z * value);
 }
 
-typedef Vector3D<float> Vector3DF;
-typedef Vector3D<int> Vector3DI;
-typedef Vector3D<long int> Vector3DLI;
-typedef Vector3D<double> Vector3DD;
+using Vector3DF = Vector3D<float>;
+using Vector3DI = Vector3D<int>;
+using Vector3DLI = Vector3D<long int>;
+using Vector3DD = Vector3D<double>;
 
 
 template<typename T>
@@ -185,10 +185,10 @@ Vector2D<T> operator*(T value, Vector2D<T> vector)
     return Vector2D(vector.x * value, vector.y * value);
 }
 
-typedef Vector2D<float> Vector2DF;
-typedef Vector2D<int> Vector2DI;
-typedef Vector2D<long int> Vector2DLI;
-typedef Vector2D<double> Vector2DD;
+using Vector2DF = Vector2D<float>;
+using Vector2DI = Vector2D<int>;
+using Vector2DLI = Vector2D<long int>;
+using Vector2DD = Vector2D<double>;
 
 template<typename T, uint32_t RowCount, uint32_t ColumnCount>
 struct Matrix
@@ -395,22 +395,24 @@ Matrix<T, RowCount, ColumnCount> MatrixElementMultiply(const Matrix<T, RowCount,
     return matrix;
 }
 
-typedef Matrix<int, 3, 3> MatrixI3x3;
-typedef Matrix<int, 3, 4> MatrixI3x4;
-typedef Matrix<int, 4, 3> MatrixI4x3;
-typedef Matrix<int, 4, 4> MatrixI4x4;
+using MatrixI3x3 = Matrix<int, 3, 3>;
+using MatrixI3x4 = Matrix<int, 3, 4>;
+using MatrixI4x3 = Matrix<int, 4, 3>;
+using MatrixI4x4 = Matrix<int, 4, 4>;
 
-typedef Matrix<float, 3, 3> MatrixF3x3;
-typedef Matrix<float, 3, 4> MatrixF3x4;
-typedef Matrix<float, 4, 3> MatrixF4x3;
-typedef Matrix<float, 4, 4> MatrixF4x4;
+using MatrixF3x3 = Matrix<float, 3, 3>;
+using MatrixF3x4 = Matrix<float, 3, 4>;
+using MatrixF4x3 = Matrix<float, 4, 3>;
+using MatrixF4x4 = Matrix<float, 4, 4>;
 
-typedef Matrix<double, 3, 3> MatrixD3x3;
-typedef Matrix<double, 3, 4> MatrixD3x4;
-typedef Matrix<double, 4, 3> MatrixD4x3;
-typedef Matrix<double, 4, 4> MatrixD4x4;
+using MatrixD3x3 = Matrix<double, 3, 3>;
+using MatrixD3x4 = Matrix<double, 3, 4>;
+using MatrixD4x3 = Matrix<double, 4, 3>;
+using MatrixD4x4 = Matrix<double, 4, 4>;
 
-typedef MatrixF3x3 Matrix3x3;
-typedef MatrixF3x4 Matrix3x4;
-typedef MatrixF4x3 Matrix4x3;
-typedef MatrixF4x4 Matrix4x4;
+using Matrix3x3 = MatrixF3x3;
+using Matrix3x4 = MatrixF3x4;
+using Matrix4x3 = MatrixF4x3;
+using Matrix4x4 = MatrixF4x4;
+
+constexpr double PI = 3.14159265358979323846;
