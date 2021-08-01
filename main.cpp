@@ -1,28 +1,8 @@
 #include "Terminal3DConfig.h"
 #include "Terminal3D.h"
 
-#include <csignal>
-#include <cstdio>
-#include <curses.h>
-#include <cstdlib>
-
-void HandleAbortSignal(int signum)
+int main(size_t arg1, char** arg2)
 {
-    addstr("\rProgram aborted, press any key to close!");
-
-    for(;;)
-    {
-        if(getch() != ERR)
-        {
-            break;
-        }
-    }
-}
-
-int main()
-{
-    signal(SIGABRT, HandleAbortSignal);
-
     (new Terminal3D())->Run();
 
     return 0;
