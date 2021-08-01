@@ -40,6 +40,10 @@ target_sources(${PROJECT_NAME} PRIVATE ${SOURCE_DIR_RECURSE})
 source_group(TREE ${PROJECT_SOURCE_DIR} FILES ${INCLUDES_DIR_RECURSE})
 source_group(TREE ${PROJECT_SOURCE_DIR} FILES ${SOURCE_DIR_RECURSE})
 
-#target_link_libraries(${PROJECT_NAME} PUBLIC ncurses)
-
 configure_file(${PROJECT_NAME}Config.h.in "${INCLUDES_DIR}/${PROJECT_NAME}Config.h")
+
+####### GOOGLE TEST BEGIN #######
+
+add_subdirectory(GoogleTest)
+
+####### GOOGLE TEST END #######
