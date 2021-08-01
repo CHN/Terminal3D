@@ -3,10 +3,7 @@
 #include "Terminal3D/Camera.h"
 
 #include <cstdio>
-#include <sys/ioctl.h>
-#include <unistd.h>
 #include <memory>
-#include <ncurses.h>
 
 namespace
 {
@@ -105,13 +102,6 @@ void Renderer::init()
     }
 }
 
-void Renderer::AutoSetWidthAndHeightByTerminalSize()
-{
-    struct winsize size;
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
-
-    m_Width = size.ws_col;
-    m_Height = size.ws_row;
 }
 
 void Renderer::SortVerticesIntoCache(const Vector3DF vertices[3])
