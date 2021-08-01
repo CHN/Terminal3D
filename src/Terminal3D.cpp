@@ -1,12 +1,15 @@
 #include "Terminal3D.h"
 
 #include "Terminal3D/Renderer.h"
+#include "Terminal3D/PlatformDependent/ConsoleManager.h"
 
 #include <chrono>
 
 void Terminal3D::Run()
 {
-    Renderer renderer;
+    ConsoleManager::TryToInitializeConsole();
+
+    Renderer renderer(ConsoleManager::GetScreenBufferSize());
     float x = 0;
 
     while(true)
@@ -34,7 +37,7 @@ void Terminal3D::Run()
 
         if(frameElapsedTimeInMs < 17)
         {
-            usleep(17 - frameElapsedTimeInMs);
+            ConsoleManager::SleepForMilliseconds(17 - frameElapsedTimeInMs);
         }
     }
 }
