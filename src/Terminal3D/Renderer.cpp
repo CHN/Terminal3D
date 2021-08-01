@@ -1,28 +1,25 @@
 #include "Terminal3D/Renderer.h"
 #include "Terminal3D/Math.h"
 #include "Terminal3D/Camera.h"
+#include "Terminal3D/PlatformDependent/ConsoleManager.h"
 
 #include <cstdio>
 #include <memory>
 
 namespace
 {
-    constexpr const char* BRIGHTNESS_TABLE = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'.";
-    constexpr float BRIGHTNESS_TABLE_LENGTH = 68.f;
+    constexpr const char* BRIGHTNESS_TABLE = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. ";
+    constexpr float BRIGHTNESS_TABLE_LENGTH = 69.f;
     constexpr int BRIGHTNESS_TABLE_LENGTH_INT = BRIGHTNESS_TABLE_LENGTH;
 }
 
-Renderer::Renderer()
+Renderer::Renderer(Vector2DI screenSize)
 {
-    AutoSetWidthAndHeightByTerminalSize();
+    m_Width = screenSize.x;
+    m_Height = screenSize.y;
 
-    init();
-}
-
-Renderer::Renderer(uint32_t width, uint32_t height)
-{
-    m_Width = width;
-    m_Height = height;
+	m_ActualWidth = m_Width - 1;
+	m_ActualHeight = m_Height;
 
     init();
 }
@@ -30,18 +27,18 @@ Renderer::Renderer(uint32_t width, uint32_t height)
 void Renderer::PreRenderTest()
 {
     memset(m_ScreenBuffer, ' ', m_ScreenBufferSize * sizeof(std::remove_pointer<decltype(m_ScreenBuffer)>::type));
-    m_ScreenBuffer[m_ScreenBufferSize - 1] = '\0';
 
-    for(size_t i = 1; i < m_ActualHeight; ++i)
-    {
-        m_ScreenBuffer[i * m_ActualWidth - 1] = '\n';
-    }
+	for (size_t i = 0; i < m_Height - 1; ++i)
+	{
+		m_ScreenBuffer[i * m_Width - 1] = '\n';
+	}
+
+    m_ScreenBuffer[m_ScreenBufferSize - 1] = '\0';
 }
 
 void Renderer::Render()
 {
-    mvaddstr(0, 0, m_ScreenBuffer);
-    refresh();
+    ConsoleManager::PrintScreenBuffer(m_ScreenBuffer, m_ScreenBufferSize);
 }
 
 void Renderer::DrawTriangleOnScreen(const Vector3DF vertices[3])
@@ -67,7 +64,7 @@ void Renderer::DrawTriangleOnScreen(const Vector3DF vertices[3])
     DrawTopTriangle(v[1], v4, v[2]);
 }
 
-Camera testCam = Camera(130);
+Camera testCam = Camera(60);
 
 void Renderer::DrawTriangleInWorld(const Vector3DF vertices[3])
 {
@@ -76,8 +73,8 @@ void Renderer::DrawTriangleInWorld(const Vector3DF vertices[3])
     for(int i = 0; i < 3; ++i)
     {
         m_TriangleRenderingCacheVertices[i] = m * vertices[i];
-        m_TriangleRenderingCacheVertices[i].x += m_Width * 0.5f;
-        m_TriangleRenderingCacheVertices[i].y += m_Height * 0.5f;
+        m_TriangleRenderingCacheVertices[i].x += m_ActualWidth * 0.5f;
+        m_TriangleRenderingCacheVertices[i].y += m_ActualHeight * 0.5f;
     }
 
     DrawTriangleOnScreen(m_TriangleRenderingCacheVertices);
@@ -85,23 +82,19 @@ void Renderer::DrawTriangleInWorld(const Vector3DF vertices[3])
 
 void Renderer::init()
 {
-    m_ActualWidth = m_Width;
-    m_ActualHeight = m_Height + 1;
-
-    m_DepthBufferSize = m_ActualWidth * m_ActualHeight + m_ActualHeight;
+    m_DepthBufferSize = m_Width * m_Height;
     m_DepthBuffer = new char[m_DepthBufferSize];
 
-    m_ScreenBufferSize = m_DepthBufferSize + 1; // +1 -> null termination character
+    m_ScreenBufferSize = m_DepthBufferSize;
     m_ScreenBuffer = new char[m_ScreenBufferSize];
     memset(m_ScreenBuffer, ' ', m_ScreenBufferSize * sizeof(std::remove_pointer<decltype(m_ScreenBuffer)>::type));
-    m_ScreenBuffer[m_ScreenBufferSize - 1] = '\0';
 
-    for(size_t i = 1; i < m_ActualHeight; ++i)
+    for(size_t i = 1; i < m_Height; ++i)
     {
-        m_ScreenBuffer[i * m_ActualWidth - 1] = '\n';
+        m_ScreenBuffer[i * m_Width + m_ActualWidth] = '\n';
     }
-}
 
+    m_ScreenBuffer[m_ScreenBufferSize - 1] = '\0';
 }
 
 void Renderer::SortVerticesIntoCache(const Vector3DF vertices[3])
@@ -157,7 +150,7 @@ void Renderer::DrawTopTriangle(const Vector3DF& v1, const Vector3DF& v2, const V
                 break;
             }
 
-            m_ScreenBuffer[i + scanlineY * m_ActualWidth] = CalculateDepth(i, scanlineY, v1, v2, v3);
+            m_ScreenBuffer[i + scanlineY * m_Width] = CalculateDepth(i, scanlineY, v1, v2, v3);
         }
 
         curx1 -= invslope1;
@@ -182,7 +175,7 @@ void Renderer::DrawBottomTriangle(const Vector3DF& v1, const Vector3DF& v2, cons
                 break;
             }
 
-            m_ScreenBuffer[i + scanlineY * m_ActualWidth] = CalculateDepth(i, scanlineY, v1, v2, v3);
+            m_ScreenBuffer[i + scanlineY * m_Width] = CalculateDepth(i, scanlineY, v1, v2, v3);
         }
         
         curx1 += invslope1;
@@ -208,9 +201,9 @@ char Renderer::CalculateDepth(const size_t sX, const size_t sY, const Vector3DF&
     float lerpZ = (invDstV1 * v1.z + invDstV2 * v2.z + invDstV3 * v3.z) / (invDstV1 + invDstV2 + invDstV3);
 
     float n = 0.5f;
-    float f = 20.f;
+    float f = 5.f;
 
-    int index = lerpZ / (f - n) * BRIGHTNESS_TABLE_LENGTH;
+    int index = (((f - n) * lerpZ) - n - f) * .5f * BRIGHTNESS_TABLE_LENGTH;
     index = std::max(0, std::min(index, BRIGHTNESS_TABLE_LENGTH_INT));
 
     return BRIGHTNESS_TABLE[index];

@@ -7,8 +7,7 @@
 class Renderer
 {
 public:
-    Renderer();
-    Renderer(uint32_t width, uint32_t height);
+    Renderer(Vector2DI screenSize);
     void PreRenderTest();
     void Render();
     void DrawTriangleOnScreen(const Vector3DF vertices[3]);
