@@ -27,7 +27,7 @@ void Camera::UpdateViewMatrix()
 
 void Camera::UpdatePerspectiveMatrix()
 {
-    float S = 1.f / (std::tan(m_Fov * M_PI / 360.f));
+    float S = 1.f / (std::tan(m_Fov * PI / 360.f));
 
     auto& p = m_PerspectiveMatrix.m;
 
