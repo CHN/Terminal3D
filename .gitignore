@@ -10,6 +10,13 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 
+######## TERMINAL 3D GIT-IGNORE BEGIN ########
+
+output/
+Terminal3D.dir/
+
+######## TERMINAL 3D GIT-IGNORE END ########
+
 ######## VISUAL STUDIO GIT-IGNORE TEMPLATE BEGIN ######## 
 
 ## Ignore Visual Studio temporary files, build results, and
