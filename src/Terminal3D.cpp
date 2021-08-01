@@ -3,19 +3,9 @@
 #include "Terminal3D/Renderer.h"
 
 #include <chrono>
-#include <unistd.h>
-#include <cmath>
-#include <ncurses.h>
 
 void Terminal3D::Run()
 {
-    system("printf '\033c'");
-    initscr();
-    cbreak();
-    noecho();
-    curs_set(0);
-    refresh();
-
     Renderer renderer;
     float x = 0;
 
