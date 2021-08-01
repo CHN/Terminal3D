@@ -32,7 +32,7 @@ void Camera::UpdatePerspectiveMatrix()
     auto& p = m_PerspectiveMatrix.m;
 
     float n = 0.5f;
-    float f = 20.f;
+    float f = 5.f;
     
     p[0][0] = S;
     p[1][1] = S;
