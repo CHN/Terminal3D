@@ -18,17 +18,26 @@ void Terminal3D::Run()
 
         renderer.PreRenderTest();
 
-        float xx = sin(x) * 50.f;
-        Vector3DF vv3D1[] = { Vector3DF(-150, -35, -1 - x), Vector3DF(150, -35, -1 - x), Vector3DF(140, 35, -1.f) };
+        float xx = sin(x) * 100.f;
+        float yy = sin(x + PI) * 100.f;
+
+        float zz = sin(x) * 2.f - 3.7f;
+        float zzz = sin(x + PI) * 2.f - 3.7f;
+
+        Vector3DF vv3D1[] = { Vector3DF(yy, -30, zzz), Vector3DF(xx, -30, zz), Vector3DF(xx, 20, zz) };
 
         if(x > 19)
         {
             x = 0;
         }
 
+        Vector3DF vv2D1[] = { { 0,0,0 }, { 0, 30,0 }, {20, 30, 0} };
+
+        renderer.DrawTriangleOnScreen(vv2D1);
+
         renderer.DrawTriangleInWorld(vv3D1);
 
-        x += 0.0007f;
+        x += 0.007f;
 
         renderer.Render();
 
