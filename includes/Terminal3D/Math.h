@@ -3,7 +3,7 @@
 #include "TypeTraits.h"
 
 #include <cstdint>
-#include <stddef.h>
+#include <cstddef>
 #include <type_traits>
 #include <sstream>
 #include <iomanip>
