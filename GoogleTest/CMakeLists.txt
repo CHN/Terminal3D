@@ -10,10 +10,11 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 set(UNIT_TEST_SOURCE_DIR "${PROJECT_SOURCE_DIR}/unitTestsSrc/")
-file(GLOB_RECURSE UNIT_TEST_SOURCES "${UNIT_TEST_SOURCE_DIR}/*.cc")
+file(GLOB_RECURSE UNIT_TEST_SOURCES "${UNIT_TEST_SOURCE_DIR}/*.c*")
 
 add_executable(${PROJECT_NAME} ${UNIT_TEST_SOURCES})
 
+target_link_libraries(${PROJECT_NAME} Terminal3D_lib)
 target_link_libraries(${PROJECT_NAME} gtest gtest_main)
 
 list(LENGTH UNIT_TEST_SOURCES UNIT_TEST_SOURCE_COUNT)
