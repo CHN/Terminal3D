@@ -1,101 +1,102 @@
-#include "../../includes/Terminal3D/EntityManager.h"
+#include "../../includes/Terminal3D/ECS/EntityManager.h"
 
 #include "gtest/gtest.h"
 
-namespace
-{
-	struct DummyComponent
-	{
-		float a;
-		int b;
-		char c;
-	};
-}
+#include <chrono>
+#include <random>
 
-TEST(EntityManager, MinimumLastFreedIndexTest)
-{
-	EntityManager<DummyComponent> em;
-
-	Entity s = em.AddComponent();
-
-	EXPECT_TRUE(s >= 0);
-
-	em.ReleaseComponent(s);
-
-	Entity s1 = em.AddComponent();
-
-	EXPECT_EQ(s, s1);
-
-	Entity s2 = em.AddComponent();
-
-	em.ReleaseComponent(s1);
-
-	Entity s3 = em.AddComponent();
-
-	EXPECT_EQ(s, s3);
-
-	em.ReleaseComponent(s2);
-
-	Entity s4 = em.AddComponent();
-
-	EXPECT_EQ(s2, s4);
-}
-
-
-TEST(EntityManager, AddGetVariableEqualityTest)
-{
-	EntityManager<DummyComponent> em;
-
-	Entity s = em.AddComponent(1.f, 2, 'c');
-
-	EXPECT_TRUE(s >= 0);
-
-	auto& c1 = em.GetComponent(s);
-
-	EXPECT_EQ(c1.a, 1.f);
-	EXPECT_EQ(c1.b, 2);
-	EXPECT_EQ(c1.c, 'c');
-
-	em.ReleaseComponent(s);
-
-	Entity s1 = em.AddComponent(3.f, 0, 'd');
-
-	EXPECT_EQ(s, s1);
-
-	EXPECT_EQ(c1.a, 3.f);
-	EXPECT_EQ(c1.b, 0);
-	EXPECT_EQ(c1.c, 'd');
-}
-
-TEST(EntityManager, ExtensiveAddRemoveTest)
+TEST(EntityManager, SequentialAllocateReleaseTest)
 {
 	constexpr size_t Size = 1000;
-	EntityManager<DummyComponent, Size> em;
+	ECS::EntityManager em(Size);
 
-	Entity prevEn = -1;
+	int prevEn = -1;
 
 	for (size_t i = 0; i < Size; ++i)
 	{
-		Entity curEn = em.AddComponent();
+		int curEn = em.Allocate();
 
-		EXPECT_TRUE(curEn - prevEn == 1);
+		ASSERT_TRUE(curEn - prevEn == 1);
 
 		prevEn = curEn;
 	}
 
-	for (size_t i = 0; i < Size; ++i)
+	for (size_t i = Size - 1; i != ~0; --i)
 	{
-		em.ReleaseComponent(i);
+		em.Release(i);
 	}
 
 	prevEn = -1;
 
 	for (size_t i = 0; i < Size; ++i)
 	{
-		Entity curEn = em.AddComponent();
+		int curEn = em.Allocate();
 
-		EXPECT_TRUE(curEn - prevEn == 1); // Fix last index and minimum index problems
+		ASSERT_TRUE(curEn - prevEn == 1);
 
 		prevEn = curEn;
+	}
+
+	for (size_t i = Size - 1; i != ~0; --i)
+	{
+		em.Release(i);
+	}
+
+	prevEn = -1;
+
+	for (size_t i = 0; i < Size; ++i)
+	{
+		int curEn = em.Allocate();
+
+		ASSERT_TRUE(curEn - prevEn == 1);
+
+		prevEn = curEn;
+	}
+}
+
+TEST(EntityManager, RandomAllocateReleaseTest)
+{
+	std::random_device rd;
+	std::mt19937::result_type seed = rd() ^ (
+		(std::mt19937::result_type)
+		std::chrono::duration_cast<std::chrono::seconds>(
+			std::chrono::system_clock::now().time_since_epoch()
+			).count() +
+		(std::mt19937::result_type)
+		std::chrono::duration_cast<std::chrono::microseconds>(
+			std::chrono::high_resolution_clock::now().time_since_epoch()
+			).count());
+
+	std::mt19937 gen(seed);
+
+	constexpr size_t Size = 100;
+
+	ECS_NS::EntityManager em(Size);
+	std::vector<ECS_NS::Entity> entities;
+	
+	size_t testCount = gen() % 20 + 10;
+
+	for (int x = 0; x < testCount; ++x)
+	{
+		size_t allocateCount = gen() % (Size - entities.size() + 1);
+
+		while (allocateCount--)
+		{
+			ECS_NS::Entity e = em.Allocate();
+
+			auto it = std::find(entities.begin(), entities.end(), e);
+			ASSERT_EQ(it, entities.end());
+
+			entities.push_back(e);
+		}
+
+		size_t releaseCount = gen() % (entities.size() + 1);
+
+		while (releaseCount--)
+		{
+			ECS_NS::Entity e = gen() % entities.size();
+			em.Release(entities[e]);
+			entities.erase(entities.begin() + e);
+		}
 	}
 }
