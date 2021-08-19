@@ -213,8 +213,8 @@ char Renderer::CalculateDepth(const size_t sX, const size_t sY, const Vector3DF&
 
     float lerpZ = (invDstV1 * v1.z + invDstV2 * v2.z + invDstV3 * v3.z) / (invDstV1 + invDstV2 + invDstV3);
 
-    float n = 0.5f;
-    float f = 25.f;
+    float n = 0.02f;
+    float f = 15.f;
 
     int index = (((f - n) * lerpZ) - n - f) * .5f * BRIGHTNESS_TABLE_LENGTH;
     index = std::max(0, std::min(index, BRIGHTNESS_TABLE_LENGTH_INT));
