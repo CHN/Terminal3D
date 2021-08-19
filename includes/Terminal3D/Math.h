@@ -89,10 +89,10 @@ struct Vector3D
 };
 
 template<typename T>
-const Vector3D<T> Vector3D<T>::Zero = Vector3D<T>(0, 0, 0);
+const Vector3D<T> Vector3D<T>::Zero(0, 0, 0);
 
 template<typename T>
-const Vector3D<T> Vector3D<T>::One = Vector3D<T>(1, 1, 1);
+const Vector3D<T> Vector3D<T>::One(1, 1, 1);
 
 template<typename T>
 Vector3D<T> operator*(T value, Vector3D<T> vector)
@@ -414,5 +414,91 @@ using Matrix3x3 = MatrixF3x3;
 using Matrix3x4 = MatrixF3x4;
 using Matrix4x3 = MatrixF4x3;
 using Matrix4x4 = MatrixF4x4;
+
+template<typename T>
+struct Quaternion
+{
+    T x, y, z, w;
+
+    Quaternion() : x(0), y(0), z(0), w(1) {}
+    Quaternion(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
+
+    inline void Multiply(const Quaternion& rhs)
+    {
+		T t_x = y * rhs.z - z * rhs.y + x * rhs.w + w * rhs.x;
+		T t_y = z * rhs.x - x * rhs.z + y * rhs.w + w * rhs.y;
+		T t_z = x * rhs.y - y * rhs.x + z * rhs.w + w * rhs.z;
+		T t_w = w * rhs.w - x * rhs.x - y * rhs.y - z * rhs.z;
+
+        x = t_x;
+        y = t_y;
+        z = t_z;
+        w = t_w;
+    }
+
+    Quaternion operator*(const Quaternion& rhs)
+    {
+        Quaternion q;
+
+        q.Multiply(rhs);
+
+        return q;
+    }
+
+    void Conjugate()
+    {
+        x = -x;
+        y = -y;
+        z = -z;
+    }
+
+    double Norm()
+    {
+        return std::sqrt(x * x + y * y + z * z + w * w);
+    }
+
+    void Normalize()
+    {
+		// Consider using double instead of T to make more precise
+		double norm = 1.0 / Norm();
+		x *= norm;
+		y *= norm;
+		z *= norm;
+		w *= norm;
+    }
+
+    void Inverse()
+    {
+        // Consider using double instead of T to make more precise
+		double norm = 1.0 / Norm();
+		Conjugate();
+		x *= norm;
+		y *= norm;
+		z *= norm;
+		w *= norm;
+    }
+
+    void SetRotation(const Vector3D<T>& rotationAxis, T angleInRadians)
+    {
+        x = rotationAxis.x * std::sin(angleInRadians * 0.5);
+        y = rotationAxis.y * std::sin(angleInRadians * 0.5);
+        z = rotationAxis.z * std::sin(angleInRadians * 0.5);
+        w = std::cos(angleInRadians * 0.5);
+    }
+
+    Quaternion RotateByAngleAxis(const Vector3D<T>& rotationAxis, T angleInRadians)
+    {
+        Quaternion q;
+        q.SetRotation(rotationAxis, angleInRadians);
+ 
+        //q.Multiply(*this);
+        q.Normalize();
+
+		return q;
+    }
+};
+
+using QuaternionF = Quaternion<float>;
+using QuaternionD = Quaternion<double>;
 
 constexpr double PI = 3.14159265358979323846;
