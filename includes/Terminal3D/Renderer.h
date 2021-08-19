@@ -15,7 +15,7 @@ public:
 
     uint32_t GetWidth() const { return m_Width; }
     uint32_t GetHeight() const { return m_Height; }
-    char* const GetScreenBuffer() const { return m_ScreenBuffer; }
+    const char* GetScreenBuffer() const { return m_ScreenBuffer; }
     uint32_t GetScreenBufferSize() const { return m_ScreenBufferSize; }
 
 private:
