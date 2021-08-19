@@ -24,6 +24,9 @@ Renderer::Renderer(Vector2DI screenSize)
     init();
 }
 
+Camera testCam = Camera(30);
+static float a;
+
 void Renderer::PreRenderTest()
 {
     memset(m_ScreenBuffer, ' ', m_ScreenBufferSize * sizeof(std::remove_pointer<decltype(m_ScreenBuffer)>::type));
@@ -34,6 +37,9 @@ void Renderer::PreRenderTest()
 	}
 
     m_ScreenBuffer[m_ScreenBufferSize - 1] = '\0';
+
+	a += 0.001f;
+	testCam.SetRotation(QuaternionF().RotateByAngleAxis(Vector3DF(0, 1, 0), a));
 }
 
 void Renderer::Render()
@@ -64,7 +70,6 @@ void Renderer::DrawTriangleOnScreen(const Vector3DF vertices[3])
     DrawTopTriangle(v[1], v4, v[2]);
 }
 
-Camera testCam = Camera(60);
 
 void Renderer::DrawTriangleInWorld(const Vector3DF vertices[3])
 {
@@ -101,6 +106,8 @@ void Renderer::init()
     }
 
     m_ScreenBuffer[m_ScreenBufferSize - 1] = '\0';
+
+    testCam.SetPosition({0, 0, -6.f});
 }
 
 void Renderer::SortVerticesIntoCache(const Vector3DF vertices[3])
@@ -147,11 +154,11 @@ void Renderer::DrawTopTriangle(const Vector3DF& v1, const Vector3DF& v2, const V
     float curx1 = v3.x;
     float curx2 = v3.x;
 
-    for (size_t scanlineY = v3.y; scanlineY > v1.y; --scanlineY)
+    for (int scanlineY = v3.y; scanlineY > v1.y; --scanlineY)
     {
-        for (size_t i = curx1; i < curx2; ++i)
+        for (int i = curx1; i < curx2; ++i)
         {
-            if(i >= m_ActualWidth)
+            if(i >= m_ActualWidth || scanlineY < 0)
             {
                 break;
             }
@@ -172,11 +179,11 @@ void Renderer::DrawBottomTriangle(const Vector3DF& v1, const Vector3DF& v2, cons
     float curx1 = v1.x;
     float curx2 = v1.x;
 
-    for (size_t scanlineY = v1.y; scanlineY <= v2.y; ++scanlineY)
+    for (int scanlineY = v1.y; scanlineY <= v2.y; ++scanlineY)
     {
-        for (size_t i = curx1; i < curx2; ++i)
+        for (int i = curx1; i < curx2; ++i)
         {
-            if(i >= m_ActualWidth)
+            if(i >= m_ActualWidth || scanlineY < 0)
             {
                 break;
             }
@@ -207,7 +214,7 @@ char Renderer::CalculateDepth(const size_t sX, const size_t sY, const Vector3DF&
     float lerpZ = (invDstV1 * v1.z + invDstV2 * v2.z + invDstV3 * v3.z) / (invDstV1 + invDstV2 + invDstV3);
 
     float n = 0.5f;
-    float f = 5.f;
+    float f = 25.f;
 
     int index = (((f - n) * lerpZ) - n - f) * .5f * BRIGHTNESS_TABLE_LENGTH;
     index = std::max(0, std::min(index, BRIGHTNESS_TABLE_LENGTH_INT));

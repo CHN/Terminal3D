@@ -10,7 +10,7 @@ void Terminal3D::Run()
     ConsoleManager::TryToInitializeConsole();
 
     Renderer renderer(ConsoleManager::GetScreenBufferSize());
-    float x = 0;
+    float x = 1;
 
     while(true)
     {
@@ -24,7 +24,7 @@ void Terminal3D::Run()
         float zz = sin(x) * 2.f - 3.7f;
         float zzz = sin(x + PI) * 2.f - 3.7f;
 
-        Vector3DF vv3D1[] = { Vector3DF(yy, -30, zzz), Vector3DF(xx, -30, zz), Vector3DF(xx, 20, zz) };
+        Vector3DF vv3D1[] = { Vector3DF(yy, -30, zz), Vector3DF(xx, -30, zz), Vector3DF(xx, 20, zz) };
 
         if(x > 19)
         {
@@ -37,7 +37,7 @@ void Terminal3D::Run()
 
         renderer.DrawTriangleInWorld(vv3D1);
 
-        x += 0.007f;
+        //x += 0.007f;
 
         renderer.Render();
 
