@@ -7,22 +7,30 @@ Camera::Camera() : m_Fov(60)
     UpdateVPCacheMatrix();
 }
 
-Camera::Camera(float fov, Vector3DF position) : m_Fov(fov), m_Position(position) 
+Camera::Camera(float fov) : m_Fov(fov)
 {
     UpdateViewMatrix();
     UpdatePerspectiveMatrix();
     UpdateVPCacheMatrix();
 }
 
+void Camera::SetPosition(Vector3DF val)
+{
+    GameObject::SetPosition(val);
+    UpdateViewMatrix();
+    UpdateVPCacheMatrix();
+}
+
+void Camera::SetRotation(QuaternionF val)
+{
+    GameObject::SetRotation(val);
+    UpdateViewMatrix();
+    UpdateVPCacheMatrix();
+}
+
 void Camera::UpdateViewMatrix()
 {   
-    Matrix4x4 transformMatrix;
-
-    float pos[] = { m_Position.x, m_Position.y, m_Position.z, 1 };
-
-    transformMatrix.SetColumns(3, pos);
-
-    m_ViewMatrix = transformMatrix.Inverse();
+    m_ViewMatrix = GetTransformationMatrix();
 }
 
 void Camera::UpdatePerspectiveMatrix()
@@ -32,7 +40,7 @@ void Camera::UpdatePerspectiveMatrix()
     auto& p = m_PerspectiveMatrix.m;
 
     float n = 0.5f;
-    float f = 5.f;
+    float f = 25.f;
     
     p[0][0] = S;
     p[1][1] = S;
@@ -43,5 +51,5 @@ void Camera::UpdatePerspectiveMatrix()
 
 void Camera::UpdateVPCacheMatrix()
 {
-    m_VPCacheMatrix = m_PerspectiveMatrix;
+    m_VPCacheMatrix = m_PerspectiveMatrix * m_ViewMatrix;
 }

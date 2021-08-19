@@ -1,13 +1,14 @@
 #pragma once
 
 #include "Math.h"
+#include "GameObject.h"
 
-class Camera
+class Camera : public GameObject
 {
 public:
 
     Camera();
-    Camera(float fov, Vector3DF position = Vector3DF::Zero);
+    Camera(float fov);
     
     float GetFov() const { return m_Fov; }
 
@@ -17,22 +18,15 @@ public:
         UpdatePerspectiveMatrix();
         UpdateVPCacheMatrix();
     }
-
-    const Vector3DF& GetPosition() const { return m_Position; }
-
-    void SetPosition(const Vector3DF& position) 
-    { 
-        m_Position = position;
-        UpdateViewMatrix();
-        UpdateVPCacheMatrix(); 
-    }
     
     const Matrix4x4 GetVPMatrix() const { return m_VPCacheMatrix; }
 
+
+    void SetPosition(Vector3DF val) override;
+    void SetRotation(QuaternionF val) override;
+
 private:
     float m_Fov = 0;
-
-    Vector3DF m_Position;
 
     Matrix4x4 m_ViewMatrix;
     Matrix4x4 m_PerspectiveMatrix;
