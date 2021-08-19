@@ -80,6 +80,12 @@ void Renderer::DrawTriangleInWorld(const Vector3DF vertices[3])
     DrawTriangleOnScreen(m_TriangleRenderingCacheVertices);
 }
 
+Renderer::~Renderer()
+{
+    delete[] m_ScreenBuffer;
+    delete[] m_DepthBuffer;
+}
+
 void Renderer::init()
 {
     m_DepthBufferSize = m_Width * m_Height;

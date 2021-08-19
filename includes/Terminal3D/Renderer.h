@@ -18,6 +18,8 @@ public:
     const char* GetScreenBuffer() const { return m_ScreenBuffer; }
     uint32_t GetScreenBufferSize() const { return m_ScreenBufferSize; }
 
+    ~Renderer();
+
 private:
     uint32_t m_Width;
     uint32_t m_Height;
