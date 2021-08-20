@@ -8,10 +8,9 @@ GameObject::GameObject()
 
 void GameObject::UpdateTransformationMatrixCache()
 {
-	auto p = m_Position * -1;
+	auto p = m_Position;
 	auto& s = m_Scale;
 	auto q = m_Rotation;
-	q.Inverse();
 
 	MatrixF4x4 sm;
 
