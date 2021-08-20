@@ -2,6 +2,7 @@
 
 #include "Terminal3D/Renderer.h"
 #include "Terminal3D/PlatformDependent/ConsoleManager.h"
+#include "Terminal3D/GameObject.h"
 
 #include <chrono>
 
@@ -11,6 +12,10 @@ void Terminal3D::Run()
 
     Renderer renderer(ConsoleManager::GetScreenBufferSize());
     float x = 1;
+
+    GameObject go;
+
+    go.SetPosition({0,0,0});
 
     while(true)
     {
@@ -24,7 +29,16 @@ void Terminal3D::Run()
         float zz = sin(x) * 2.f - 3.7f;
         float zzz = sin(x + PI) * 2.f - 3.7f;
 
-        Vector3DF vv3D1[] = { Vector3DF(yy, -30, zz), Vector3DF(xx, -30, zz), Vector3DF(xx, 20, zz) };
+        go.SetRotation(go.GetRotation().RotateByAngleAxis({0, 1, 0}, x));
+
+        Vector3DF vv3D1[] = { Vector3DF(-4, -3, 0), Vector3DF(4, -3, 0), Vector3DF(4, 2, 0) };
+        Vector3DF vv3D2[] = { Vector3DF(4, -3, 0), Vector3DF(4, 2, 0), Vector3DF(4, 2, 4) };
+
+        for (int i = 0; i < 3; ++i)
+        {
+            vv3D1[i] = go.GetTransformationMatrix() * vv3D1[i];
+            vv3D2[i] = go.GetTransformationMatrix() * vv3D2[i];
+        }
 
         if(x > 19)
         {
@@ -33,11 +47,12 @@ void Terminal3D::Run()
 
         Vector3DF vv2D1[] = { { 0,0,0 }, { 0, 30,0 }, {20, 30, 0} };
 
-        renderer.DrawTriangleOnScreen(vv2D1);
+        //renderer.DrawTriangleOnScreen(vv2D1);
 
+        renderer.DrawTriangleInWorld(vv3D2);
         renderer.DrawTriangleInWorld(vv3D1);
 
-        //x += 0.007f;
+        x += 0.007f;
 
         renderer.Render();
 

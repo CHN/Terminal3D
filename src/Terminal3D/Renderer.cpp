@@ -24,11 +24,12 @@ Renderer::Renderer(Vector2DI screenSize)
     init();
 }
 
-Camera testCam = Camera(30);
+Camera testCam = Camera(60);
 static float a;
 
 void Renderer::PreRenderTest()
 {
+    memset(m_DepthBuffer, 127, m_DepthBufferSize * sizeof(std::remove_pointer<decltype(m_DepthBuffer)>::type));
     memset(m_ScreenBuffer, ' ', m_ScreenBufferSize * sizeof(std::remove_pointer<decltype(m_ScreenBuffer)>::type));
 
 	for (size_t i = 0; i < m_Height - 1; ++i)
@@ -38,8 +39,8 @@ void Renderer::PreRenderTest()
 
     m_ScreenBuffer[m_ScreenBufferSize - 1] = '\0';
 
-	a += 0.001f;
-	testCam.SetRotation(QuaternionF().RotateByAngleAxis(Vector3DF(0, 1, 0), a));
+	a += 0.03f;
+	//testCam.SetRotation(QuaternionF().RotateByAngleAxis(Vector3DF(0, 1, 0), a));
 }
 
 void Renderer::Render()
@@ -109,7 +110,8 @@ void Renderer::init()
 
     m_ScreenBuffer[m_ScreenBufferSize - 1] = '\0';
 
-    testCam.SetPosition({0, 0, -6.f});
+    testCam.SetPosition({0, 7, -6.f});
+    testCam.SetRotation(QuaternionF().RotateByAngleAxis(Vector3DF(1, 0, 0), PI / -4.f));
 }
 
 void Renderer::SortVerticesIntoCache(const Vector3DF vertices[3])
