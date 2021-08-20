@@ -1,15 +1,9 @@
 #include "Terminal3D/GameObject.h"
 
-GameObject::GameObject()
-	: m_Position(Vector3DF::Zero), m_Scale(1,1,1)
-{
-
-}
-
 void GameObject::UpdateTransformationMatrixCache()
 {
 	auto p = m_Position;
-	auto& s = m_Scale;
+	auto s = m_Scale;
 	auto q = m_Rotation;
 
 	MatrixF4x4 sm;

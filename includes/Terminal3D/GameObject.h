@@ -8,7 +8,7 @@ class GameObject
 {
 public:
 
-	GameObject();
+	GameObject() : m_Position(Vector3DF::Zero), m_Scale(Vector3DF::One) {}
 
 	Vector3DF GetPosition() const { return m_Position; }
 	virtual void SetPosition(Vector3DF val) 
