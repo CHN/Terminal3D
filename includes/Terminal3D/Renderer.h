@@ -39,7 +39,7 @@ private:
     void DrawTopTriangle(const Vector3DF& v1, const Vector3DF& v2, const Vector3DF& v3);
     void DrawBottomTriangle(const Vector3DF& v1, const Vector3DF& v2, const Vector3DF& v3);
 
-    char CalculateDepth(const size_t sX, const size_t sY, const Vector3DF& v1, const Vector3DF& v2, const Vector3DF& v3);
+    char CalculateDepth(const size_t sX, const size_t sY, const Vector3DF& v1, const Vector3DF& v2, const Vector3DF& v3, int* outIndex);
 
     Vector3DF m_TriangleRenderingCacheVertices[3];
 };

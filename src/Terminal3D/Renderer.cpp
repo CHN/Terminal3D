@@ -98,6 +98,8 @@ void Renderer::init()
 
     m_ScreenBufferSize = m_DepthBufferSize;
     m_ScreenBuffer = new char[m_ScreenBufferSize];
+
+    memset(m_DepthBuffer, 127, m_DepthBufferSize * sizeof(std::remove_pointer<decltype(m_DepthBuffer)>::type));
     memset(m_ScreenBuffer, ' ', m_ScreenBufferSize * sizeof(std::remove_pointer<decltype(m_ScreenBuffer)>::type));
 
     for(size_t i = 1; i < m_Height; ++i)
@@ -158,12 +160,21 @@ void Renderer::DrawTopTriangle(const Vector3DF& v1, const Vector3DF& v2, const V
     {
         for (int i = curx1; i < curx2; ++i)
         {
-            if(i >= m_ActualWidth || scanlineY < 0)
+            if(i < 0 || i >= m_ActualWidth || scanlineY < 0 || scanlineY >= m_ActualHeight)
             {
-                break;
+                continue;;
             }
 
-            m_ScreenBuffer[i + scanlineY * m_Width] = CalculateDepth(i, scanlineY, v1, v2, v3);
+			int index;
+			char depth = CalculateDepth(i, scanlineY, v1, v2, v3, &index); // rename depth
+
+			if (m_DepthBuffer[i + scanlineY * m_Width] < index)
+			{
+				continue;
+			}
+
+			m_DepthBuffer[i + scanlineY * m_Width] = index;
+			m_ScreenBuffer[i + scanlineY * m_Width] = depth;
         }
 
         curx1 -= invslope1;
@@ -183,12 +194,21 @@ void Renderer::DrawBottomTriangle(const Vector3DF& v1, const Vector3DF& v2, cons
     {
         for (int i = curx1; i < curx2; ++i)
         {
-            if(i >= m_ActualWidth || scanlineY < 0)
+            if (i < 0 || i >= m_ActualWidth || scanlineY < 0 || scanlineY >= m_ActualHeight)
             {
-                break;
+                continue;
             }
 
-            m_ScreenBuffer[i + scanlineY * m_Width] = CalculateDepth(i, scanlineY, v1, v2, v3);
+            int index;
+            char depth = CalculateDepth(i, scanlineY, v1, v2, v3, &index); // rename depth
+
+            if (m_DepthBuffer[i + scanlineY * m_Width] < index)
+            {
+                continue;
+            }
+            
+            m_DepthBuffer[i + scanlineY * m_Width] = index;
+            m_ScreenBuffer[i + scanlineY * m_Width] = depth;
         }
         
         curx1 += invslope1;
@@ -196,7 +216,7 @@ void Renderer::DrawBottomTriangle(const Vector3DF& v1, const Vector3DF& v2, cons
     }
 }
 
-char Renderer::CalculateDepth(const size_t sX, const size_t sY, const Vector3DF& v1, const Vector3DF& v2, const Vector3DF& v3)
+char Renderer::CalculateDepth(const size_t sX, const size_t sY, const Vector3DF& v1, const Vector3DF& v2, const Vector3DF& v3, int* outIndex)
 {   
     float v1XDiff = sX - v1.x;
     float v1YDiff = sY - v1.y;
@@ -216,8 +236,13 @@ char Renderer::CalculateDepth(const size_t sX, const size_t sY, const Vector3DF&
     float n = 0.02f;
     float f = 15.f;
 
-    int index = (((f - n) * lerpZ) - n - f) * .5f * BRIGHTNESS_TABLE_LENGTH;
+    //float zNormalized = 2.f * lerpZ - 1.f;
+    //int index = 2.f * n * f / (f + n - zNormalized * (f - n)) * BRIGHTNESS_TABLE_LENGTH;
+    int index = (n - lerpZ) / (f - n) * BRIGHTNESS_TABLE_LENGTH;
+
     index = std::max(0, std::min(index, BRIGHTNESS_TABLE_LENGTH_INT));
+
+    *outIndex = index;
 
     return BRIGHTNESS_TABLE[index];
 }
