@@ -491,7 +491,7 @@ struct Quaternion
         Quaternion q;
         q.SetRotation(rotationAxis, angleInRadians);
  
-        //q.Multiply(*this);
+        q.Multiply(*this);
         q.Normalize();
 
 		return q;

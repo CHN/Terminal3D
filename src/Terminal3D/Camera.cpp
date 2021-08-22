@@ -33,7 +33,7 @@ void Camera::UpdateViewMatrix()
 	const auto p = m_Position * -1.f;
 	auto q = m_Rotation;
 
-	//q.Inverse();
+	q.Inverse();
 
 	MatrixF4x4 rm;
 
