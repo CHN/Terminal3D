@@ -39,8 +39,8 @@ void Renderer::PreRenderTest()
 
     m_ScreenBuffer[m_ScreenBufferSize - 1] = '\0';
 
-	a += 0.03f;
-	//testCam.SetRotation(QuaternionF().RotateByAngleAxis(Vector3DF(0, 1, 0), a));
+	a += 0.006f;
+    //testCam.SetRotation(testCam.GetRotation().RotateByAngleAxis(Vector3DF(0, 1, 0), 0.006f));
 }
 
 void Renderer::Render()

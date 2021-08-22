@@ -15,8 +15,6 @@ void Terminal3D::Run()
 
     GameObject go;
 
-    go.SetPosition({0,0,0});
-
     while(true)
     {
         std::chrono::steady_clock::time_point frameStartTime = std::chrono::steady_clock::now();
@@ -29,7 +27,7 @@ void Terminal3D::Run()
         float zz = sin(x) * 2.f - 3.7f;
         float zzz = sin(x + PI) * 2.f - 3.7f;
 
-        go.SetRotation(go.GetRotation().RotateByAngleAxis({0, 1, 0}, x));
+        go.SetRotation(go.GetRotation().RotateByAngleAxis({0, 1, 0}, 0.007f));
 
         Vector3DF vv3D1[] = { Vector3DF(-4, -3, 0), Vector3DF(4, -3, 0), Vector3DF(4, 2, 0) };
         Vector3DF vv3D2[] = { Vector3DF(4, -3, 0), Vector3DF(4, 2, 0), Vector3DF(4, 2, 4) };
