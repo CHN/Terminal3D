@@ -28,16 +28,24 @@ function(CreateTarget PROJECT_NAME PROJECT_TYPE)
 	endforeach()
 
 	if(PROJECT_TYPE MATCHES LIBRARY)
+
 		if(${SOURCE_COUNT} GREATER 0)
+
 			add_library(${NAME} STATIC ${HEADERS} ${SOURCES})
 			target_include_directories(${NAME} PUBLIC ${PUBLIC_HEADER_PATHS} ${SOURCE_DIR})
 			set_target_properties(${NAME} PROPERTIES LINKER_LANGUAGE CXX)
+
 		else()
+
 			add_library(${NAME} INTERFACE)
 			target_include_directories(${NAME} INTERFACE ${PUBLIC_HEADER_PATHS})
+
 		endif()
+
 	elseif(PROJECT_TYPE MATCHES EXECUTABLE)
+
 		add_executable(${NAME} ${HEADERS} ${SOURCES})
+
 	endif()
 
 	source_group(TREE ${SOURCE_DIR} FILES ${HEADERS} ${SOURCES})
