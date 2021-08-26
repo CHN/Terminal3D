@@ -1,4 +1,4 @@
-#include "Terminal3D/GameObject.h"
+#include "GameObject.h"
 
 void GameObject::UpdateTransformationMatrixCache()
 {

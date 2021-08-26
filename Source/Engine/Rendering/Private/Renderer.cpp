@@ -1,7 +1,7 @@
-#include "Terminal3D/Renderer.h"
-#include "Terminal3D/Math.h"
-#include "Terminal3D/Camera.h"
-#include "Terminal3D/PlatformDependent/ConsoleManager.h"
+#include "Renderer.h"
+#include "Math.h"
+#include "Camera.h"
+#include "ConsoleManager.h"
 
 #include <cstdio>
 #include <memory>
@@ -40,7 +40,7 @@ void Renderer::PreRenderTest()
     m_ScreenBuffer[m_ScreenBufferSize - 1] = '\0';
 
 	a += 0.006f;
-    //testCam.SetRotation(testCam.GetRotation().RotateByAngleAxis(Vector3DF(0, 1, 0), 0.006f));
+    //testCam.SetRotation(testCam.GetRotation().RotateByAngleAxis(Vector3DF(1, 0, 0), 0.006f));
 }
 
 void Renderer::Render()
@@ -72,9 +72,9 @@ void Renderer::DrawTriangleOnScreen(const Vector3DF vertices[3])
 }
 
 
-void Renderer::DrawTriangleInWorld(const Vector3DF vertices[3])
+void Renderer::DrawTriangleInWorld(const MatrixF4x4& modelMatrix, Vector3DF vertices[3])
 {
-    auto& m = testCam.GetVPMatrix();
+    auto m = testCam.GetVPMatrix() * modelMatrix;
 
     for(int i = 0; i < 3; ++i)
     {
@@ -110,8 +110,8 @@ void Renderer::init()
 
     m_ScreenBuffer[m_ScreenBufferSize - 1] = '\0';
 
-    testCam.SetPosition({0, 7, -6.f});
-    testCam.SetRotation(QuaternionF().RotateByAngleAxis(Vector3DF(1, 0, 0), PI / -4.f));
+    testCam.SetPosition({0, 7, -7.f});
+    testCam.SetRotation(QuaternionF().RotateByAngleAxis(Vector3DF(1, 0, 0), PI / 4.f));
 }
 
 void Renderer::SortVerticesIntoCache(const Vector3DF vertices[3])

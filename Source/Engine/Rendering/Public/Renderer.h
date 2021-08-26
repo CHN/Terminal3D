@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Math.h"
+#include "Math.hpp"
 
 #include <cstdint>
 
@@ -11,7 +11,7 @@ public:
     void PreRenderTest();
     void Render();
     void DrawTriangleOnScreen(const Vector3DF vertices[3]);
-    void DrawTriangleInWorld(const Vector3DF vertices[3]);
+    void DrawTriangleInWorld(const MatrixF4x4& modelMatrix, Vector3DF vertices[3]);
 
     uint32_t GetWidth() const { return m_Width; }
     uint32_t GetHeight() const { return m_Height; }

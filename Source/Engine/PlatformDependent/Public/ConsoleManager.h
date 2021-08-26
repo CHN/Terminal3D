@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Terminal3D/Math.h"
+#include "Math.hpp"
 
 class ConsoleManager
 {

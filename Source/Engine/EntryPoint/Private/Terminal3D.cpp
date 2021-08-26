@@ -1,8 +1,8 @@
 #include "Terminal3D.h"
 
-#include "Terminal3D/Renderer.h"
-#include "Terminal3D/PlatformDependent/ConsoleManager.h"
-#include "Terminal3D/GameObject.h"
+#include "Renderer.h"
+#include "ConsoleManager.h"
+#include "GameObject.h"
 
 #include <chrono>
 
@@ -14,6 +14,7 @@ void Terminal3D::Run()
     float x = 1;
 
     GameObject go;
+    go.SetPosition({ 0, 0, 0 });
 
     while(true)
     {
@@ -32,12 +33,6 @@ void Terminal3D::Run()
         Vector3DF vv3D1[] = { Vector3DF(-4, -3, 0), Vector3DF(4, -3, 0), Vector3DF(4, 2, 0) };
         Vector3DF vv3D2[] = { Vector3DF(4, -3, 0), Vector3DF(4, 2, 0), Vector3DF(4, 2, 4) };
 
-        for (int i = 0; i < 3; ++i)
-        {
-            vv3D1[i] = go.GetTransformationMatrix() * vv3D1[i];
-            vv3D2[i] = go.GetTransformationMatrix() * vv3D2[i];
-        }
-
         if(x > 19)
         {
             x = 0;
@@ -47,8 +42,8 @@ void Terminal3D::Run()
 
         //renderer.DrawTriangleOnScreen(vv2D1);
 
-        renderer.DrawTriangleInWorld(vv3D2);
-        renderer.DrawTriangleInWorld(vv3D1);
+        renderer.DrawTriangleInWorld(go.GetTransformationMatrix(), vv3D2);
+        renderer.DrawTriangleInWorld(go.GetTransformationMatrix(), vv3D1);
 
         x += 0.007f;
 
