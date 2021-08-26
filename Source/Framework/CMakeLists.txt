@@ -1,3 +1,5 @@
 project(Framework)
 
-GenerateIncludes(${PROJECT_NAME})
+CreateTarget(${PROJECT_NAME} EXECUTABLE)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE Config Engine)

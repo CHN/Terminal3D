@@ -1,3 +1,3 @@
 project(Config)
 
-GenerateIncludes(${PROJECT_NAME})
+CreateTarget(${PROJECT_NAME} LIBRARY)

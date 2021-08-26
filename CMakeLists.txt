@@ -17,7 +17,7 @@ set(UTILITY_MODULE_PATH "${SOURCE_DIR}/BuildSystem/CMake/")
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${UTILITY_MODULE_PATH})
 
-include("include_generator")
+include("create_target")
 
 add_subdirectory(Source)
 
