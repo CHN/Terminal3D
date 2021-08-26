@@ -158,9 +158,9 @@ void Renderer::DrawTopTriangle(const Vector3DF& v1, const Vector3DF& v2, const V
     float curx1 = v3.x;
     float curx2 = v3.x;
 
-    for (int scanlineY = v3.y; scanlineY > v1.y; --scanlineY)
+    for (int scanlineY = (int)v3.y; scanlineY > v1.y; --scanlineY)
     {
-        for (int i = curx1; i < curx2; ++i)
+        for (int i = (int)curx1; i < curx2; ++i)
         {
             if(i < 0 || i >= m_ActualWidth || scanlineY < 0 || scanlineY >= m_ActualHeight)
             {
@@ -192,9 +192,9 @@ void Renderer::DrawBottomTriangle(const Vector3DF& v1, const Vector3DF& v2, cons
     float curx1 = v1.x;
     float curx2 = v1.x;
 
-    for (int scanlineY = v1.y; scanlineY <= v2.y; ++scanlineY)
+    for (int scanlineY = (int)v1.y; scanlineY <= v2.y; ++scanlineY)
     {
-        for (int i = curx1; i < curx2; ++i)
+        for (int i = (int)curx1; i < curx2; ++i)
         {
             if (i < 0 || i >= m_ActualWidth || scanlineY < 0 || scanlineY >= m_ActualHeight)
             {

@@ -451,7 +451,7 @@ struct Quaternion
         y = -y;
         z = -z;
     }
-
+    // TODO: Add math template types
     double Norm()
     {
         return std::sqrt(x * x + y * y + z * z + w * w);
@@ -459,8 +459,7 @@ struct Quaternion
 
     void Normalize()
     {
-		// Consider using double instead of T to make more precise
-		double norm = 1.0 / Norm();
+		T norm = 1.0 / Norm();
 		x *= norm;
 		y *= norm;
 		z *= norm;
@@ -469,8 +468,7 @@ struct Quaternion
 
     void Inverse()
     {
-        // Consider using double instead of T to make more precise
-		double norm = 1.0 / Norm();
+		T norm = 1.0 / Norm();
 		Conjugate();
 		x *= norm;
 		y *= norm;
