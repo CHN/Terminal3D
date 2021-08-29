@@ -3,7 +3,9 @@
 
 int main(size_t arg1, char** arg2)
 {
-    (new Terminal3D())->Run();
+    auto* program = new Terminal3D();
+    program->Run();
+    delete program;
 
     return 0;
 }
