@@ -22,8 +22,8 @@ public:
     const Matrix4x4 GetVPMatrix() const { return m_VPCacheMatrix; }
 
 
-    void SetPosition(Vector3DF val) override;
-    void SetRotation(QuaternionF val) override;
+    void SetPosition(const Vector3DF& val) override;
+    void SetRotation(const QuaternionF& val) override;
 
 private:
     float m_Fov = 0;

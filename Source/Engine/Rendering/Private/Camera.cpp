@@ -14,14 +14,14 @@ Camera::Camera(float fov) : m_Fov(fov)
 	UpdateVPCacheMatrix();
 }
 
-void Camera::SetPosition(Vector3DF val)
+void Camera::SetPosition(const Vector3DF& val)
 {
 	GameObject::SetPosition(val);
 	UpdateViewMatrix();
 	UpdateVPCacheMatrix();
 }
 
-void Camera::SetRotation(QuaternionF val)
+void Camera::SetRotation(const QuaternionF& val)
 {
 	GameObject::SetRotation(val);
 	UpdateViewMatrix();
@@ -30,8 +30,8 @@ void Camera::SetRotation(QuaternionF val)
 
 void Camera::UpdateViewMatrix()
 {
-	const auto p = m_Position * -1.f;
-	auto q = m_Rotation;
+	const auto p = GetPosition() * -1.f; // Will be replaced with TRS Operations
+	auto q = GetRotation();
 
 	q.Inverse();
 

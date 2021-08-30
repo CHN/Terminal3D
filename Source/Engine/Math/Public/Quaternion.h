@@ -12,7 +12,7 @@ struct Quaternion
     Quaternion() : x(0), y(0), z(0), w(1) {}
     Quaternion(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
 
-    inline void Multiply(const Quaternion& rhs)
+    void MultiplyInPlace(const Quaternion& rhs)
     {
 		T t_x = y * rhs.z - z * rhs.y + x * rhs.w + w * rhs.x;
 		T t_y = z * rhs.x - x * rhs.z + y * rhs.w + w * rhs.y;
@@ -25,14 +25,19 @@ struct Quaternion
         w = t_w;
     }
 
-    Quaternion operator*(const Quaternion& rhs)
+    Quaternion operator*(const Quaternion& rhs) const
     {
         Quaternion q;
 
-        q.Multiply(rhs);
+        q.MultiplyInPlace(rhs);
 
         return q;
     }
+
+	Quaternion operator*=(const Quaternion& rhs) const
+	{
+		return *this * rhs;
+	}
 
     void Conjugate()
     {
@@ -41,7 +46,7 @@ struct Quaternion
         z = -z;
     }
     // TODO: Add math template types
-    double Norm()
+    double Norm() const
     {
         return std::sqrt(x * x + y * y + z * z + w * w);
     }
@@ -73,12 +78,21 @@ struct Quaternion
         w = std::cos(angleInRadians * 0.5);
     }
 
-    Quaternion RotateByAngleAxis(const Vector3D<T>& rotationAxis, T angleInRadians)
+	void RotateByAngleAxisInPlace(const Vector3D<T>& rotationAxis, T angleInRadians)
+	{
+		Quaternion q;
+		q.SetRotation(rotationAxis, angleInRadians);
+
+		MultiplyInPlace(q);
+		Normalize();
+	}
+
+    Quaternion RotateByAngleAxis(const Vector3D<T>& rotationAxis, T angleInRadians) const
     {
         Quaternion q;
         q.SetRotation(rotationAxis, angleInRadians);
  
-        q.Multiply(*this);
+        q.MultiplyInPlace(*this);
         q.Normalize();
 
 		return q;

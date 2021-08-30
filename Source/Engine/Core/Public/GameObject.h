@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Math.hpp"
+#include "MatrixTRS.h"
 
 // Consider migrating to ECS
 
@@ -8,41 +9,29 @@ class GameObject
 {
 public:
 
-	GameObject() : m_Position(Vector3DF::Zero), m_Scale(Vector3DF::One) {}
-
-	Vector3DF GetPosition() const { return m_Position; }
-	virtual void SetPosition(Vector3DF val) 
+	Vector3DF GetPosition() const { return transformationMatrix.GetPosition(); }
+	virtual void SetPosition(const Vector3DF& val) 
 	{ 
-		m_Position = val;
-		UpdateTransformationMatrixCache();
+		transformationMatrix.SetPosition(val);
 	}
 
-	Vector3DF GetScale() const { return m_Scale; }
-	virtual void SetScale(Vector3DF val) 
+	Vector3DF GetScale() const { return transformationMatrix.GetScale(); }
+	virtual void SetScale(const Vector3DF& val)
 	{
-		m_Scale = val;
-		UpdateTransformationMatrixCache();
+		transformationMatrix.SetScale(val);
 	}
 
-	QuaternionF GetRotation() const { return m_Rotation; }
-	virtual void SetRotation(QuaternionF val) 
+	QuaternionF GetRotation() const { return transformationMatrix.GetRotation(); }
+	virtual void SetRotation(const QuaternionF& val)
 	{ 
-		m_Rotation = val;
-		UpdateTransformationMatrixCache(); 
+		transformationMatrix.SetRotation(val);
 	}
 
-	const MatrixF4x4& GetTransformationMatrix() const { return m_TransformationMatrixCache; }
+	const MatrixF4x4& GetTransformationMatrix() const { return transformationMatrix; }
 
 	virtual ~GameObject() = default;
 
 protected:
 
-	Vector3DF m_Position;
-	Vector3DF m_Scale;
-	QuaternionF m_Rotation;
-
-private:
-	MatrixF4x4 m_TransformationMatrixCache;
-
-	void UpdateTransformationMatrixCache(); // Consider using dirtying method
+	MatrixTRS<float, true /*Dirting should be considered*/> transformationMatrix;
 };
