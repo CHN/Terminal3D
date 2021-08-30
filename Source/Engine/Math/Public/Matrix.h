@@ -97,7 +97,8 @@ struct Matrix
         return matrix;
     }
 
-    Vector3D<T> operator*(const Vector3D<T>& vector) const
+    // Should be replaced with MatrixVector operations
+    Vector3D<T> operator*(const Vector3D<T>& vector) const 
     {
         Vector3D<T> outVector;
         T temp[4] = { 0 };
