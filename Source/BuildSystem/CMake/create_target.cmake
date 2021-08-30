@@ -1,3 +1,5 @@
+include("set_platform_dependent_directories")
+
 function(CreateTarget PROJECT_NAME PROJECT_TYPE)
 
 	set(NAME ${PROJECT_NAME})
@@ -8,11 +10,6 @@ function(CreateTarget PROJECT_NAME PROJECT_TYPE)
 
 	list(LENGTH HEADERS HEADER_COUNT)
 	list(LENGTH SOURCES SOURCE_COUNT)
-
-	if(${SOURCE_COUNT} EQUAL 0 AND ${HEADER_COUNT} EQUAL 0)
-		message("${name} library is not generated due to having 0 headers and sources")
-		return()
-	endif()
 
 	set(PUBLIC_HEADER_PATHS "")
 
@@ -26,6 +23,16 @@ function(CreateTarget PROJECT_NAME PROJECT_TYPE)
 		endif()
 
 	endforeach()
+
+	set(PLATFORM_DEPENDENT_DIR "PlatformDependent")
+
+	SetPlatformDependentDirectories(HEADERS)
+	SetPlatformDependentDirectories(SOURCES)
+	
+	if(${SOURCE_COUNT} EQUAL 0 AND ${HEADER_COUNT} EQUAL 0)
+		message("\"${PROJECT_NAME}\" library is not generated due to having 0 headers and sources")
+		return()
+	endif()
 
 	if(PROJECT_TYPE MATCHES LIBRARY)
 

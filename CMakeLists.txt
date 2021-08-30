@@ -17,6 +17,19 @@ set(UTILITY_MODULE_PATH "${SOURCE_DIR}/BuildSystem/CMake/")
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${UTILITY_MODULE_PATH})
 
+set(PLATFORMS "Windows" "MacOS" "Unix")
+
+if(WIN32)
+	list(GET PLATFORMS 0 PLATFORM)
+	set(CURRENT_PLATFORM ${PLATFORM})
+elseif(APPLE)
+	list(GET PLATFORMS 1 PLATFORM)
+	set(CURRENT_PLATFORM ${PLATFORM})
+elseif(UNIX)
+	list(GET PLATFORMS 2 PLATFORM)
+	set(CURRENT_PLATFORM ${PLATFORM})
+endif()
+
 include("create_target")
 
 add_subdirectory(Source)
