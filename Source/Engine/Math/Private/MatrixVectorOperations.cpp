@@ -1,5 +1,8 @@
 #include "MatrixVectorOperations.h"
 
+template MatrixVectorOperations<float>;
+template MatrixVectorOperations<double>;
+
 template<typename T>
 Vector3D<T> MatrixVectorOperations<T>::MultiplyByVector3D(const Matrix<T, 4, 4>& matrix, const Vector3D<T>& vector)
 {
